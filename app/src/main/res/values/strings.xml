@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Location_Source</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="do_you_want_to_save_this_selected_nlocation">Do you want to save this selected\nlocation?</string>
+    <string name="save">Save</string>
+    <string name="google_map_api_key">AIzaSyBSNyp6GQnnKlrMr7hD2HGiyF365tFlK5U</string>
+    <string name="title_activity_maps_routing">MapsRoutingActivity</string>
+</resources>
