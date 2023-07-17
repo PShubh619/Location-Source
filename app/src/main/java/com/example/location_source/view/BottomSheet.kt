@@ -1,4 +1,4 @@
-package com.example.location_source
+package com.example.location_source.view
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.ViewModel
+import com.example.location_source.R
 import com.example.location_source.databinding.ActivityBottomSheetBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 

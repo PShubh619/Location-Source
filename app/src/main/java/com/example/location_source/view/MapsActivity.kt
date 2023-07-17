@@ -1,16 +1,11 @@
-package com.example.location_source
+package com.example.location_source.view
 
 import android.annotation.SuppressLint
-import android.content.ContentValues.TAG
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.location.Geocoder
 import android.os.Bundle
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -20,14 +15,12 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import android.location.Location
-import android.util.Log
 import android.view.View
-import android.widget.AutoCompleteTextView
 import android.widget.Button
 
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import com.example.location_source.model.AddLocationDataClass
+import com.example.location_source.R
 import com.google.android.gms.common.api.Status
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
@@ -64,7 +57,7 @@ class MapsActivity() : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = DataBindingUtil.setContentView(this,R.layout.activity_maps)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_maps)
 //        setContentView(binding.root)
 
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment

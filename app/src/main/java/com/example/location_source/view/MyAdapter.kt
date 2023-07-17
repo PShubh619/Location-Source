@@ -1,7 +1,6 @@
-package com.example.location_source
+package com.example.location_source.view
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -9,10 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
+import com.example.location_source.model.AddLocationDataClass
 import com.example.location_source.databinding.ActivityAddLocationLayoutBinding
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken

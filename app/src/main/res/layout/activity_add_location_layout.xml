@@ -6,7 +6,7 @@
         
         <variable
             name="list"
-            type="com.example.location_source.AddLocationDataClass" />
+            type="com.example.location_source.model.AddLocationDataClass" />
         
     </data>
 
@@ -115,7 +115,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:text="@{Double.toString(list.distance)}"
+            android:text="@{list.distance}"
             android:textSize="17sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

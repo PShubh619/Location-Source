@@ -1,4 +1,4 @@
-package com.example.location_source
+package com.example.location_source.view
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -9,6 +9,8 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
+import com.example.location_source.model.AddLocationDataClass
+import com.example.location_source.R
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -42,7 +44,7 @@ class MapsRoutingActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = DataBindingUtil.setContentView(this,R.layout.activity_maps_routing)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_maps_routing)
 //        setContentView(binding.root)
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
