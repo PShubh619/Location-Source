@@ -1,4 +1,4 @@
-package com.example.location_source.view
+package com.example.location_source
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -15,8 +15,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
-import com.example.location_source.model.AddLocationDataClass
-import com.example.location_source.R
 import com.example.location_source.databinding.ActivityAddLocationBinding
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.gson.Gson
@@ -49,7 +47,7 @@ class AddLocationActivity : AppCompatActivity() {
     @SuppressLint("MissingInflatedId", "CommitPrefEdits")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_add_location)
+        binding = DataBindingUtil.setContentView(this,R.layout.activity_add_location)
 //        setContentView(binding.root)
 
         listView = binding.lvLocation
@@ -82,7 +80,7 @@ class AddLocationActivity : AppCompatActivity() {
                         AddLocationDataClass(
                             location,
                             currentAddress,
-                            distance,
+                            distance.toDouble(),
                             Latitude,
                             Longitude,
                             IsPrimary = isPrimary
@@ -124,7 +122,8 @@ class AddLocationActivity : AppCompatActivity() {
                     arrayList.clear()
                     arrayList.addAll(sort)
                     adapter?.notifyDataSetChanged()
-                } else if (OrdeOfList == "Descending") {
+                }
+                else if (OrdeOfList == "Descending") {
                     val sort = arrayList.sortedByDescending { it.Distance }
                     arrayList.clear()
                     arrayList.addAll(sort)

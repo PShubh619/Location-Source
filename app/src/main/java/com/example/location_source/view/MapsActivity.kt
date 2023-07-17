@@ -185,6 +185,7 @@ class MapsActivity() : AppCompatActivity(), OnMapReadyCallback {
             editor.putString("location", cityName)
             editor.putString("Latitude", Latitude)
             editor.putString("Longitude", Longitude)
+            editor.putString("isFirstTime", isFirstItem.toString())
 
             if (isFirstItem) {
                 editor.putString("lastLatitude", Latitude)

@@ -2,6 +2,12 @@
 
 <layout>
 
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.location_source.viewmodel.ToMapsViewModel" />
+    </data>
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -132,6 +138,7 @@
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
+            android:onClick="@{()->viewModel.toMapActivity()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.503"
@@ -152,6 +159,7 @@
         android:text="Add POI"
         android:textAllCaps="false"
         android:visibility="gone"
+        android:onClick="@{()->viewModel.toMapActivity()}"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -163,6 +171,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/baseline_shortcut_24"
         android:visibility="gone"
+        android:onClick="@{()->viewModel.toMapRoutActivity()}"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.918"

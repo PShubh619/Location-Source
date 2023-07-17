@@ -74,7 +74,7 @@ class MapsRoutingActivity : AppCompatActivity(), OnMapReadyCallback {
 
         val list = getArrayList("List")
         for (item in list) {
-            if (item.IsPrimary) {
+            if (item.isPrimary) {
                 val Latitude: String? = sharedPreferences.getString("Latitude", null)
                 val Longitude: String? = sharedPreferences.getString("Longitude", null)
                 Location = LatLng(Latitude!!.toDouble(), Longitude!!.toDouble())
@@ -123,7 +123,7 @@ class MapsRoutingActivity : AppCompatActivity(), OnMapReadyCallback {
         val waypoints = arrayListOf<LatLng>()
         getArrayList("List").forEach {
             waypoints.add(
-                LatLng(it.Longitude.toDouble(), it.Latitude.toDouble())
+                LatLng(it.longitude.toDouble(), it.latitude.toDouble())
             )
         }
         for( i in waypoints){
