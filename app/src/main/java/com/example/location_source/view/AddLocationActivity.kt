@@ -1,21 +1,31 @@
-package com.example.location_source
+package com.example.location_source.view
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.BaseAdapter
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.ListView
+import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
+import com.example.location_source.DataBaseInstance
+import com.example.location_source.R
 import com.example.location_source.databinding.ActivityAddLocationBinding
+import com.example.location_source.databinding.ActivityAddLocationLayoutBinding
+import com.example.location_source.model.AddLocationDataClass
+import com.example.location_source.viewmodel.AddLocationViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -27,28 +37,20 @@ class AddLocationActivity : AppCompatActivity() {
     private lateinit var addLocationEmpty: Button
     private lateinit var fbtnShowRoute: FloatingActionButton
     private lateinit var ivList: ImageView
-    private lateinit var Latitude: String
-    private lateinit var Longitude: String
-    var adapter: MyAdapter? = null
-    var arrayList: ArrayList<AddLocationDataClass> = ArrayList()
-
-    //    private val selectedLocations: ArrayList<String> = ArrayList()
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var addActivityResultLauncher: ActivityResultLauncher<Intent>
-    var distance: String = ""
-    var currentAddress: String = ""
-    var location: String = ""
-    lateinit var gson: Gson
-    lateinit var listJson: String
-    lateinit var editor: SharedPreferences
     private lateinit var binding: ActivityAddLocationBinding
+    private lateinit var bindingLayout: ActivityAddLocationLayoutBinding
+    private lateinit var adapter: MyAdapter
+    private var arrayList: ArrayList<AddLocationDataClass> = ArrayList()
+    private  var orderOfList :String = "Ascending"
 
+    // Declare ViewModel
+    private lateinit var viewModel: AddLocationViewModel
 
-    @SuppressLint("MissingInflatedId", "CommitPrefEdits")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this,R.layout.activity_add_location)
-//        setContentView(binding.root)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_add_location)
 
         listView = binding.lvLocation
         clListViewEmpty = binding.clListviewEmpty
@@ -57,111 +59,48 @@ class AddLocationActivity : AppCompatActivity() {
         fbtnShowRoute = binding.fbtnShowRoute
         ivList = binding.ivList
 
+        val db = (application as DataBaseInstance).db
 
         sharedPreferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
 
-//        for (i in 0..100){
-//            print(i)
-//        }
+
+
+        // Initialize ViewModel
+        viewModel = ViewModelProvider(this).get(AddLocationViewModel::class.java)
+
+
+        viewModel.ascLocationList.observe(this) { locationList ->
+            Log.d("Result", locationList.toString())
+            arrayList.clear()
+            arrayList.addAll(locationList)
+            adapter.notifyDataSetChanged()
+            updateVisibility()
+            sortLocationsByDistance()
+
+        }
 
 
         addActivityResultLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == Activity.RESULT_OK) {
-                    distance = sharedPreferences.getString("distance", "").toString()
-                    currentAddress = sharedPreferences.getString("address", "").toString()
-                    location = sharedPreferences.getString("location", "").toString()
-                    Latitude = sharedPreferences.getString("Latitude", "").toString()
-                    Longitude = sharedPreferences.getString("Longitude", "").toString()
-
-                    // Set IsPrimary property
-                    val isPrimary = arrayList.isEmpty() // Check if the list is empty
-                    arrayList.add(
-                        AddLocationDataClass(
-                            location,
-                            currentAddress,
-                            distance.toDouble(),
-                            Latitude,
-                            Longitude,
-                            IsPrimary = isPrimary
-                        )
-                    )
-
-                    // Set IsPrimary to false for other items in the list
-                    for (i in 1 until arrayList.size) {
-                        arrayList[i].IsPrimary = false
-                    }
-                    gson = Gson()
-                    listJson = gson.toJson(arrayList)
+                    updateVisibility()
+                    val gson = Gson()
+                    val listJson = gson.toJson(arrayList)
                     val editor = sharedPreferences.edit()
                     editor.putString("List", listJson)
                     editor.apply()
-
-                    adapter?.notifyDataSetChanged()
                 }
+
             }
 
-        listJson = sharedPreferences.getString("List", null).toString()
-        if (!listJson.isNullOrEmpty()) {
-            val gson = Gson()
-            val type = object : TypeToken<ArrayList<AddLocationDataClass>>() {}.type
-            val retrievedList = gson.fromJson<ArrayList<AddLocationDataClass>>(listJson, type)
-            if (retrievedList != null) {
-                arrayList.addAll(retrievedList)
-                adapter?.notifyDataSetChanged()
-            }
-        }
+        adapter = MyAdapter(this, arrayList, viewModel)
+        listView.adapter = adapter
 
-//        var bottomSheet = BottomSheet()
-        ivList.setOnClickListener {
-            val isSelected: String = ""
-            BottomSheet.newInstance(isSelected, sortBy = {
-                val OrdeOfList = sharedPreferences.getString("OrderOfList", null)
-                if (OrdeOfList == "Ascending") {
-                    val sort = arrayList.sortedBy { it.Distance }
-                    arrayList.clear()
-                    arrayList.addAll(sort)
-                    adapter?.notifyDataSetChanged()
-                }
-                else if (OrdeOfList == "Descending") {
-                    val sort = arrayList.sortedByDescending { it.Distance }
-                    arrayList.clear()
-                    arrayList.addAll(sort)
-                    adapter?.notifyDataSetChanged()
-                }
-            }).show(supportFragmentManager, "TAG")
-        }
-
-
-//        val editor = sharedPreferences.edit()
-//        editor.putString("List", arrayList.toString())
-
-
-        updatevicibility()
-
-//        val stringBuffer= StringBuffer()
-//        val retrievedData = sharedPreferences.getString("data", "")
-
-//        sharedPreferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
-//        val distance = sharedPreferences.getString("distance", "")
-//        val currentAddress = sharedPreferences.getString("address", "")
-//        val location = sharedPreferences.getString("location", "")
-
-//        if (currentAddress != null && !distance.isNullOrEmpty()) {
-//            try {
-//                val distanceValue = distance.toDouble()
-//
-//
-//            } catch (e: NumberFormatException) {
-//                // Handle the case where distance is not a valid numeric value
-//                // You can log an error, show a message, or take appropriate action
-//            }
-//        }
         addLocation.setOnClickListener {
             val intent = Intent(this, MapsActivity::class.java)
             addActivityResultLauncher.launch(intent)
-
         }
+
         addLocationEmpty.setOnClickListener {
             val intent = Intent(this, MapsActivity::class.java)
             addActivityResultLauncher.launch(intent)
@@ -170,22 +109,27 @@ class AddLocationActivity : AppCompatActivity() {
         fbtnShowRoute.setOnClickListener {
             val intent = Intent(this, MapsRoutingActivity::class.java)
             addActivityResultLauncher.launch(intent)
-
         }
 
-        adapter = MyAdapter(this, arrayList)
-        listView.adapter = adapter
+        ivList.setOnClickListener {
+            openBottomSheet()
+        }
 
-
+        val listJson = sharedPreferences.getString("List", "")
+        if (!listJson.isNullOrEmpty()) {
+            val gson = Gson()
+            val type = object : TypeToken<ArrayList<AddLocationDataClass>>() {}.type
+            val retrievedList = gson.fromJson<ArrayList<AddLocationDataClass>>(listJson, type)
+            if (retrievedList != null) {
+                arrayList.clear()
+                arrayList.addAll(retrievedList)
+                adapter.notifyDataSetChanged()
+            }
+        }
+        updateVisibility()
     }
 
-
-    override fun onResume() {
-        super.onResume()
-        updatevicibility()
-    }
-
-    private fun updatevicibility() {
+    private fun updateVisibility() {
         if (arrayList.isEmpty()) {
             clListViewEmpty.visibility = View.VISIBLE
             addLocation.visibility = View.GONE
@@ -195,28 +139,39 @@ class AddLocationActivity : AppCompatActivity() {
             addLocation.visibility = View.VISIBLE
             listView.visibility = View.VISIBLE
             fbtnShowRoute.visibility = View.VISIBLE
-//            sortLocationsByDistance()
-//            updateListView()
         }
     }
 
-//    private fun sortLocationsByDistance() {
-//
-//        val OrdeOfList = sharedPreferences.getString("AscendingOrder", "").toBoolean()
-//        if (OrdeOfList==true){
-//           val sort = arrayList.sortedBy { it.Distance }
-//            arrayList.clear()
-//            arrayList.addAll(sort)
-//            adapter?.notifyDataSetChanged()
-//        }
-//        if (OrdeOfList==false){
-//            val sort = arrayList.sortedByDescending { it.Distance }
-//            arrayList.clear()
-//            arrayList.addAll(sort)
-//            adapter?.notifyDataSetChanged()
-//        }
-//
+    private fun openBottomSheet() {
+        val bottomSheet = BottomSheet.newInstance("Ascending") {
+            orderOfList = sharedPreferences.getString("OrderOfList", null).toString()
+            sortLocationsByDistance()        }
+        bottomSheet.show(supportFragmentManager, bottomSheet.tag)
+    }
+
+
+    private fun sortLocationsByDistance() {
+
+
+        if (orderOfList=="Descending"){
+//            Log.e("BeforeSort",arrayList.toString())
+            val sort = arrayList.sortedByDescending { it.distance.toDouble() }
+            arrayList.clear()
+            arrayList.addAll(sort)
+//            Log.e("Sort",arrayList.toString())
+            adapter.notifyDataSetChanged()
+        }else{
+            val sort = arrayList.sortedBy { it.distance.toDouble() }
+            arrayList.clear()
+            arrayList.addAll(sort)
+            adapter.notifyDataSetChanged()
+        }
+
+    }
+//    fun primary(){
+//        if ()
 //    }
+}
 
 
 //        private fun saveList() {
@@ -233,6 +188,6 @@ class AddLocationActivity : AppCompatActivity() {
 //        listView.adapter = adapter
 //    }
 
-}
+
 
 

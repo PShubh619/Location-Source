@@ -8,6 +8,7 @@ class Routes {
     var legs = ArrayList<Legs>()
 }
 
+
 class Legs {
     var distance = Distance()
     var duration = Duration()

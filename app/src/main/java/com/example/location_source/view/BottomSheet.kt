@@ -49,11 +49,9 @@ class BottomSheet : BottomSheetDialogFragment() {
             sortBy.invoke()
             dismiss()
         }
-
         binding.ivBack.setOnClickListener {
             dismiss()
         }
-
         return binding.root
     }
 

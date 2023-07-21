@@ -9,20 +9,20 @@ import androidx.room.*
 interface ContantDAO {
 
     @Insert
-    suspend fun insertLocation(contact: AddLocationDataClass)
+    fun insertLocation(contact: AddLocationDataClass)
 
     @Update
-    suspend fun updateLocation(contact: AddLocationDataClass)
+     fun updateLocation(contact: AddLocationDataClass)
 
     @Delete
-    suspend fun deleteLocation(contact: AddLocationDataClass)
+     fun deleteLocation(contact: AddLocationDataClass)
 
 
-//    @Query("SELECT * FROM location ORDER BY distance ASC")
-//    suspend fun ascendingList() : LiveData<List<AddLocationDataClass>>
-//
-//
-//    @Query("SELECT * FROM location ORDER BY distance DESC")
-//    suspend fun descendingList() : LiveData<List<AddLocationDataClass>>
+    @Query("SELECT * FROM location ORDER BY distance ASC")
+     fun ascendingList() : LiveData<List<AddLocationDataClass>>
+
+
+    @Query("SELECT * FROM location ORDER BY distance DESC")
+     fun descendingList() : LiveData<List<AddLocationDataClass>>
 
 }

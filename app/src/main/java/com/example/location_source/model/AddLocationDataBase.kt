@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 
 
 
-@Database(entities =  [AddLocationDataClass::class], version =  1)
+@Database(entities =  [AddLocationDataClass::class], version = 1)
 abstract class AddLocationDataBase : RoomDatabase() {
     abstract fun dao(): ContantDAO
 }

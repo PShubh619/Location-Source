@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.location.Geocoder
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -19,8 +20,11 @@ import android.view.View
 import android.widget.Button
 
 import androidx.databinding.DataBindingUtil
-import com.example.location_source.model.AddLocationDataClass
+import androidx.lifecycle.ViewModelProvider
 import com.example.location_source.R
+import com.example.location_source.model.AddLocationDataClass
+import com.example.location_source.viewmodel.AddLocationViewModel
+import com.example.location_source.viewmodel.MapsViewModel
 import com.google.android.gms.common.api.Status
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
@@ -29,8 +33,10 @@ import com.google.android.libraries.places.widget.listener.PlaceSelectionListene
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.google.maps.android.SphericalUtil
+import java.lang.String.format
+import kotlin.math.log
 
-class MapsActivity() : AppCompatActivity(), OnMapReadyCallback {
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
@@ -51,27 +57,25 @@ class MapsActivity() : AppCompatActivity(), OnMapReadyCallback {
     private var Longitude: String = ""
     private var isFirstItem: Boolean = true
     private var last: LatLng = LatLng(0.0, 0.0)
+    private var lastCheck: LatLng = LatLng(0.0, 0.0)
+    private var lat:String=""
+    private var lng:String=""
 
+    private lateinit var viewModel: MapsViewModel
+    private lateinit var listViewModel: AddLocationViewModel
+  //  private var lastLatLng: LatLng? = null
 
     @SuppressLint("WrongViewCast", "ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_maps)
-//        setContentView(binding.root)
-
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
-
-        val IVBack = binding.ivBack
-        IVBack.setOnClickListener {
-            finish() // Go back to the previous activity
-        }
 
         clPermissionSave = binding.clPermissionSave
 
         arrayList = ArrayList()
-
 
         toolbar = binding.toolBar
         setSupportActionBar(toolbar)
@@ -91,13 +95,26 @@ class MapsActivity() : AppCompatActivity(), OnMapReadyCallback {
         } else {
             arrayList = ArrayList()
         }
-            val lastLatitude = sharedPreferences.getString("lastLatitude", "")
-            val lastLongitude = sharedPreferences.getString("lastLongitude", "")
-        if (!lastLatitude.isNullOrEmpty() && !lastLongitude.isNullOrEmpty()) {
-                    last = LatLng(lastLatitude.toDouble(), lastLongitude.toDouble())
 
+        listViewModel = ViewModelProvider(this).get(AddLocationViewModel::class.java)
+        listViewModel.ascLocationList.observe(this) { locationList ->
+          //      Log.d ("List:", locationList.toString())
+            if (locationList.isNotEmpty()) {
+                val lastLocation = locationList.last()
+                last = LatLng(lastLocation.lat.toDouble(), lastLocation.lng.toDouble())
+                lat = lastLocation.lat
+                lng = lastLocation.lng
+
+//                Latitude = last.latitude.toString() ?: ""
+//                Longitude = last.longitude.toString() ?: ""
             }
-
+//            else {
+//                lastLatLng?.let {
+//                    Latitude = it.latitude.toString()
+//                    Longitude = it.longitude.toString()
+//                }
+//            }
+        }
 
         Places.initialize(applicationContext, getString(R.string.google_map_api_key))
         locationEditText =
@@ -112,12 +129,12 @@ class MapsActivity() : AppCompatActivity(), OnMapReadyCallback {
         )
         btnSave = binding.btnSave
 
-        sharedPreferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
+        viewModel = ViewModelProvider(this).get(MapsViewModel::class.java)
 
-//        val searchButton = findViewById<TextView>(R.id.TVSearchPlace)
         locationEditText.setOnPlaceSelectedListener(object : PlaceSelectionListener {
             override fun onError(p0: Status) {}
 
+            @SuppressLint("DefaultLocale")
             override fun onPlaceSelected(p0: Place) {
                 clPermissionSave.visibility = View.VISIBLE
                 val locationName = locationEditText.toString()
@@ -127,86 +144,58 @@ class MapsActivity() : AppCompatActivity(), OnMapReadyCallback {
                     val address = addressList[0]
                     val latLng = p0.latLng
 
-                    Latitude = latLng.latitude.toString()
-                    Longitude = latLng.longitude.toString()
-
                     marker = mMap.addMarker(MarkerOptions().position(latLng).title(addressList))
                     marker?.showInfoWindow()
+                    Latitude=marker?.position?.latitude.toString()
+                    Longitude=marker?.position?.longitude.toString()
 
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12.0f))
 
+                    if (last==lastCheck){
+                    last = LatLng(Latitude.toDouble(), Longitude.toDouble())
+                        lat = Latitude
+                        lng = Longitude
+
+                    }
+
                     marker?.let {
-                        last
                         currentAddress = getAddressFromLatLng(marker!!.position)
                         cityName = getCityNameFromLatLng(marker!!.position)
-                        if (!isFirstItem) {
                             distanceInMeters = calculateDistance(last, marker!!.position)
                             distanceInKM = distanceInMeters / 1000
-                        }
+                            distanceInKM = format("%.2f", distanceInKM).toFloat()
                     }
                     lastMarker = marker
                 }
             }
+        })
 
-//        }) {
-//            val locationName = locationEditText.text.toString()
-//
-//            CLPermissionSave.visibility = View.VISIBLE
-//
-//            val geocoder = Geocoder(this)
-//            val addressList = geocoder.getFromLocationName(locationName, 1)
-//            if (!addressList.isNullOrEmpty()) {
-//                val address = addressList[0]
-//                val latLng = LatLng(address.latitude, address.longitude)
-//
-//                val marker = mMap.addMarker(MarkerOptions().position(latLng).title(locationName))
-//                marker?.showInfoWindow()
-//
-//                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16.0f))
-//
-//                lastMarker?.let { last ->
-//                    if (marker != null) {
-//                        distanceInMeters = calculateDistance(last.position, marker.position)
-//                        currentAddress = getAddressFromLatLng(marker.position)
-//                        cityName = getCityNameFromLatLng(marker.position)
-//                    }
-//
-//                }
-//                lastMarker = marker
-//            }
+//        if (isFirstItem) {
+//            lat = Latitude
+//            lng = Longitude
+//            isFirstItem = false
 //        }
-        }
-        )
 
         btnSave.setOnClickListener {
-            val editor = sharedPreferences.edit()
-            editor.putString("distance", distanceInKM.toString())
-            editor.putString("address", currentAddress)
-            editor.putString("location", cityName)
-            editor.putString("Latitude", Latitude)
-            editor.putString("Longitude", Longitude)
-            editor.putString("isFirstTime", isFirstItem.toString())
-
-            if (isFirstItem) {
-                editor.putString("lastLatitude", Latitude)
-                editor.putString("lastLongitude", Longitude)
-                isFirstItem = false
-            }
-
-            editor.apply()
-
+            Log.d("distance", distanceInKM.toString())
+            viewModel.insertLocation(
+                cityName,
+                currentAddress,
+                distanceInKM.toString(),
+                Longitude,
+                Latitude,
+                isFirstItem,
+                lat,
+                lng
+            )
             setResult(RESULT_OK)
             finish()
         }
-
-//        locationEditText.setText("")
     }
-
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
-        // Rest of your code...
         val india = LatLng(22.0, 77.0)
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(india, 5f))
 
@@ -216,23 +205,12 @@ class MapsActivity() : AppCompatActivity(), OnMapReadyCallback {
         } else {
             mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_default))
         }
-
     }
-
-//    private fun calculateDistance(latLng1: LatLng, latLng2: LatLng): Float {
-//        val results = FloatArray(1)
-//        Location.distanceBetween(
-//            latLng1.latitude, latLng1.longitude,
-//            latLng2.latitude, latLng2.longitude, results
-//        )
-//        return results[1]
-//    }
 
     private fun calculateDistance(latLng1: LatLng, latLng2: LatLng): Float {
-       val distance = SphericalUtil.computeDistanceBetween(latLng1, latLng2)
+        val distance = SphericalUtil.computeDistanceBetween(latLng1, latLng2)
         return distance.toFloat()
     }
-
 
     private fun getAddressFromLatLng(latLng: LatLng): String {
         val geocoder = Geocoder(this)
@@ -254,3 +232,4 @@ class MapsActivity() : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 }
+

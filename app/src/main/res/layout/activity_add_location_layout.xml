@@ -3,11 +3,11 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
-        
+
         <variable
             name="list"
-            type="com.example.location_source.AddLocationDataClass" />
-        
+            type="com.example.location_source.model.AddLocationDataClass" />
+
     </data>
 
 <androidx.constraintlayout.widget.ConstraintLayout
@@ -115,8 +115,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:text="@{Double.toString(list.distance)}"
+            android:text="@{list.distance}"
             android:textSize="17sp"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.063"
