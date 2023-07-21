@@ -54,8 +54,7 @@ class MapsRoutingActivity : AppCompatActivity(), OnMapReadyCallback {
         sharedPreferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
         OrdeOfList = sharedPreferences.getString("OrderOfList", "").toString()
 
-        back = binding.ivBack
-        back.setOnClickListener {
+        binding.ivBack.setOnClickListener {
             finish()
         }
 
@@ -93,7 +92,7 @@ class MapsRoutingActivity : AppCompatActivity(), OnMapReadyCallback {
         val url = getDirectionURL(waypoints, getString(R.string.google_map_api_key))
         getDirection( mMap ,url, waypoints)
     }
-    }
+
 
     private fun getDirectionURL(waypoints: List<LatLng>, secret: String): String {
         val origin = waypoints.first()
@@ -143,26 +142,27 @@ class MapsRoutingActivity : AppCompatActivity(), OnMapReadyCallback {
                     val waypoint = waypoints[i]
                     mMap?.addMarker(MarkerOptions().position(waypoint))
 
-//                    if (OrdeOfList == "Ascending") {
-//                        if (i == 0) {
-//                            firstLocation = waypoint
-//                        }
-//                    }
-//                    if (OrdeOfList == "Descending") {
-//                        if (i != 0) {
-//                            firstLocation = waypoint
-//                        }
-//                    }
+                    if (OrdeOfList == "Ascending") {
+                        if (i == 0) {
+                            firstLocation = waypoint
+                        }
+                    }
+                    if (OrdeOfList == "Descending") {
+                        if (i != 0) {
+                            firstLocation = waypoint
+                        }
+                    }
                 }
-//                firstLocation?.let {
-//                    mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(it, 10f))
-//                }
-                val india = LatLng(22.0, 77.0)
-                mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(india, 5f))
+                firstLocation?.let {
+                    mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(it, 10f))
+                }
+//                val india = LatLng(22.0, 77.0)
+//                mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(india, 5f))
                 mMap?.addPolyline(lineOption)
             }
         }
     }
+
 
     private fun decodePolyline(encoded: String): List<LatLng> {
         val poly = ArrayList<LatLng>()
@@ -195,6 +195,7 @@ class MapsRoutingActivity : AppCompatActivity(), OnMapReadyCallback {
         }
         return poly
     }
+}
 
 
 

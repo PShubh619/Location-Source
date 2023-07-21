@@ -19,6 +19,7 @@ class BottomSheet : BottomSheetDialogFragment() {
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var sortBy: () -> Unit
     private lateinit var isSelected: String
+    private var selectedOrder : String = "Ascending"
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,7 +40,7 @@ class BottomSheet : BottomSheetDialogFragment() {
         }
 
         binding.btnApply.setOnClickListener {
-            val selectedOrder = if (binding.viewModel?.ascendingOrderChecked?.get() == true) {
+            selectedOrder = if (binding.viewModel?.ascendingOrderChecked?.get() == true) {
                 "Ascending"
             } else {
                 "Descending"

@@ -5,4 +5,5 @@
     <color name="Pink">#FF788C</color>
     <color name="LitePink">#373737</color>
     <color name="BackgroundColor">#000000</color>
+    <color name="BackgroundColorList">#3C3C3C</color>
 </resources>

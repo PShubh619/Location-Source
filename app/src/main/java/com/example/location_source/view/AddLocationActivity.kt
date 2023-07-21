@@ -70,7 +70,7 @@ class AddLocationActivity : AppCompatActivity() {
 
 
         viewModel.ascLocationList.observe(this) { locationList ->
-            Log.d("Result", locationList.toString())
+//            Log.d("Result", locationList.toString())
             arrayList.clear()
             arrayList.addAll(locationList)
             adapter.notifyDataSetChanged()

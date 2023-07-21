@@ -18,6 +18,7 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
 
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -72,6 +73,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_maps)
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+        binding.ivBack.setOnClickListener {
+            finish()
+        }
 
         clPermissionSave = binding.clPermissionSave
 

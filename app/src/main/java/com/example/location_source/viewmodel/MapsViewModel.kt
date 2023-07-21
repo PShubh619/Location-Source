@@ -4,14 +4,19 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.location_source.DataBaseInstance
+import com.example.location_source.model.AddLocationDataBase
 import com.example.location_source.model.AddLocationDataClass
+import com.example.location_source.model.ContantDAO
+import com.example.location_source.model.Repository
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MapsViewModel(application: Application) : AndroidViewModel(application) {
 
-    private  val db = (application as DataBaseInstance).db
+    private val db: AddLocationDataBase = (application as DataBaseInstance).db
+    private val dao: ContantDAO = db.dao()
+    private val repository: Repository = Repository(dao)
 
     fun insertLocation(
         location: String,
@@ -21,22 +26,22 @@ class MapsViewModel(application: Application) : AndroidViewModel(application) {
         latitude: String,
         isPrimary: Boolean,
         lat: String,
-        lng:String
+        lng: String
     ) {
         viewModelScope.launch(Dispatchers.IO) {
-            db.dao().insertLocation(
-                AddLocationDataClass(
-                    0,
-                    location,
-                    address,
-                    distance,
-                    longitude,
-                    latitude,
-                    isPrimary,
-                    lat,
-                    lng
-                )
+            val newLocation = AddLocationDataClass(
+                0,
+                location,
+                address,
+                distance,
+                longitude,
+                latitude,
+                isPrimary,
+                lat,
+                lng
             )
+            repository.insertLocation(newLocation)
         }
     }
 }
+
