@@ -40,7 +40,7 @@ class AddLocationActivity : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var addActivityResultLauncher: ActivityResultLauncher<Intent>
     private lateinit var binding: ActivityAddLocationBinding
-    private lateinit var bindingLayout: ActivityAddLocationLayoutBinding
+//    private lateinit var bindingLayout: ActivityAddLocationLayoutBinding
     private lateinit var adapter: MyAdapter
     private var arrayList: ArrayList<AddLocationDataClass> = ArrayList()
     private  var orderOfList :String = "Ascending"

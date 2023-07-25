@@ -1,6 +1,7 @@
 package com.example.location_source.view
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,7 +40,7 @@ class MyAdapter(
         val addressTextView: TextView = view.findViewById(R.id.tvAddress)
         val distanceTextView: TextView = view.findViewById(R.id.tvDistance)
         val deleteButton: ImageView = view.findViewById(R.id.tvDeleat)
-//            val editButton: ImageView = view.findViewById(R.id.tvEdit)
+            val editButton: ImageView = view.findViewById(R.id.tvEdit)
         val isprimary: TextView = view.findViewById(R.id.tvPrimary)
 
         locationNameTextView.text = location.location
@@ -49,9 +50,13 @@ class MyAdapter(
         deleteButton.setOnClickListener {
             viewModel.deleteLocation(location)
         }
-//            editButton.setOnClickListener {
-//                viewModel.updateLocation(location)
-//            }
+        editButton.setOnClickListener {
+//            viewModel.updateLocation(location)
+            val intent = Intent(context, MapsActivity::class.java)
+//            intent.putExtra("location",location)
+            context.startActivity(intent)
+            viewModel.deleteLocation(location)
+        }
 
         if (location.distance=="0.0"){
             isprimary.visibility = View.VISIBLE

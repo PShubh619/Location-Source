@@ -34,11 +34,10 @@ class MapsRoutingActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var binding: ActivityMapsRoutingBinding
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var OrdeOfList: String
-    private lateinit var back: ImageView
-    private var Location: LatLng = LatLng(0.0, 0.0)
+//    private var Location: LatLng = LatLng(0.0, 0.0)
     var firstLocation: LatLng? = null
-    private var longitude: Double = 0.0
-    private var latitude: Double = 0.0
+//    private var longitude: Double = 0.0
+//    private var latitude: Double = 0.0
     private val coordinatesList: MutableList<LatLng> = mutableListOf()
 
     private lateinit var viewModel: AddLocationViewModel
@@ -148,7 +147,7 @@ class MapsRoutingActivity : AppCompatActivity(), OnMapReadyCallback {
                         }
                     }
                     if (OrdeOfList == "Descending") {
-                        if (i != 0) {
+                        if (i !=0 ) {
                             firstLocation = waypoint
                         }
                     }
@@ -196,7 +195,6 @@ class MapsRoutingActivity : AppCompatActivity(), OnMapReadyCallback {
         return poly
     }
 }
-
 
 
 

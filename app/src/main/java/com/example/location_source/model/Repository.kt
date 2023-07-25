@@ -14,4 +14,8 @@ class Repository(private val dao: ContantDAO) {
         dao.insertLocation(location)
     }
 
+    fun updateLocation(location: AddLocationDataClass) {
+        dao.updateLocation(location)
+    }
 }
+
