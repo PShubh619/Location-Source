@@ -72,12 +72,12 @@ class MapsRoutingActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
-        val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
-            mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_dark))
-        } else {
-            mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_default))
-        }
+//        val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+//        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+//            mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_dark))
+//        } else {
+//            mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_default))
+//        }
     }
 
     private fun drawRoute(locations: List<LatLng>) {
