@@ -204,12 +204,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val india = LatLng(22.0, 77.0)
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(india, 5f))
 
-//        val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-//        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
-//            mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_dark))
-//        } else {
-//            mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_default))
-//        }
+        val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+            mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_dark))
+        } else {
+            mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_default))
+        }
     }
 
     private fun calculateDistance(latLng1: LatLng, latLng2: LatLng): Float {
