@@ -2,6 +2,10 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.Location_Source" parent="Theme.Material3.DayNight.NoActionBar">
 
+        <item name="android:statusBarColor">
+            @color/BackgroundColor
+        </item>
+
     </style>
 
 </resources>
