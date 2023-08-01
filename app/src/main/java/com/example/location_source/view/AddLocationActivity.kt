@@ -40,7 +40,6 @@ class AddLocationActivity : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var addActivityResultLauncher: ActivityResultLauncher<Intent>
     private lateinit var binding: ActivityAddLocationBinding
-//    private lateinit var bindingLayout: ActivityAddLocationLayoutBinding
     private lateinit var adapter: MyAdapter
     private var arrayList: ArrayList<AddLocationDataClass> = ArrayList()
     private  var orderOfList :String = "Ascending"
@@ -84,11 +83,11 @@ class AddLocationActivity : AppCompatActivity() {
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == Activity.RESULT_OK) {
                     updateVisibility()
-                    val gson = Gson()
-                    val listJson = gson.toJson(arrayList)
-                    val editor = sharedPreferences.edit()
-                    editor.putString("List", listJson)
-                    editor.apply()
+//                    val gson = Gson()
+//                    val listJson = gson.toJson(arrayList)
+//                    val editor = sharedPreferences.edit()
+//                    editor.putString("List", listJson)
+//                    editor.apply()
                 }
 
             }
@@ -113,19 +112,7 @@ class AddLocationActivity : AppCompatActivity() {
 
         ivList.setOnClickListener {
             openBottomSheet()
-        }
-
-        val listJson = sharedPreferences.getString("List", "")
-        if (!listJson.isNullOrEmpty()) {
-            val gson = Gson()
-            val type = object : TypeToken<ArrayList<AddLocationDataClass>>() {}.type
-            val retrievedList = gson.fromJson<ArrayList<AddLocationDataClass>>(listJson, type)
-            if (retrievedList != null) {
-                arrayList.clear()
-                arrayList.addAll(retrievedList)
-                adapter.notifyDataSetChanged()
-            }
-        }
+        }   
         updateVisibility()
     }
 
@@ -151,8 +138,6 @@ class AddLocationActivity : AppCompatActivity() {
 
 
     private fun sortLocationsByDistance() {
-
-
         if (orderOfList=="Descending"){
 //            Log.e("BeforeSort",arrayList.toString())
             val sort = arrayList.sortedByDescending { it.distance.toDouble() }

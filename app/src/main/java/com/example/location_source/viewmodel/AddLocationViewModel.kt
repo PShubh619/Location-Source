@@ -20,16 +20,11 @@ class AddLocationViewModel(application: Application) : AndroidViewModel(applicat
     private val repository: Repository = Repository(dao)
 
     val ascLocationList: LiveData<List<AddLocationDataClass>> = repository.ascLocationList
+    val descLocationList: LiveData<List<AddLocationDataClass>> = repository.descLocationList
 
     fun deleteLocation(location: AddLocationDataClass) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.deleteLocation(location)
-        }
-    }
-
-    fun updateLocation(location: AddLocationDataClass) {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.updateLocation(location)
         }
     }
 }

@@ -6,6 +6,7 @@ import android.content.res.Configuration
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -36,8 +37,6 @@ class MapsRoutingActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var OrdeOfList: String
 //    private var Location: LatLng = LatLng(0.0, 0.0)
     var firstLocation: LatLng? = null
-//    private var longitude: Double = 0.0
-//    private var latitude: Double = 0.0
     private val coordinatesList: MutableList<LatLng> = mutableListOf()
 
     private lateinit var viewModel: AddLocationViewModel
@@ -47,17 +46,25 @@ class MapsRoutingActivity : AppCompatActivity(), OnMapReadyCallback {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_maps_routing)
 
+
+
+        viewModel = ViewModelProvider(this).get(AddLocationViewModel::class.java)
+
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
         sharedPreferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
         OrdeOfList = sharedPreferences.getString("OrderOfList", "").toString()
 
+        if (OrdeOfList.isNullOrEmpty()){
+            OrdeOfList="Ascending"
+        }
+
         binding.ivBack.setOnClickListener {
             finish()
         }
 
-        viewModel = ViewModelProvider(this).get(AddLocationViewModel::class.java)
+        if (OrdeOfList == "Ascending"){
         viewModel.ascLocationList.observe(this) { locationList ->
             coordinatesList.clear() // Clear the list before populating it with new coordinates
             for (location in locationList) {
@@ -67,7 +74,23 @@ class MapsRoutingActivity : AppCompatActivity(), OnMapReadyCallback {
                 coordinatesList.add(latLng)
             }
             drawRoute(coordinatesList)
-        }    }
+        }
+        }
+        if (OrdeOfList == "Descending"){
+        viewModel.descLocationList.observe(this) { locationList ->
+
+            coordinatesList.clear() // Clear the list before populating it with new coordinates
+            for (location in locationList) {
+                Log.d("List", "$location" )
+                val latitude = location.latitude.toDouble()
+                val longitude = location.longitude.toDouble()
+                val latLng = LatLng(latitude, longitude)
+                coordinatesList.add(latLng)
+            }
+            drawRoute(coordinatesList)
+        }
+        }
+    }
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
@@ -141,16 +164,16 @@ class MapsRoutingActivity : AppCompatActivity(), OnMapReadyCallback {
                     val waypoint = waypoints[i]
                     mMap?.addMarker(MarkerOptions().position(waypoint))
 
-                    if (OrdeOfList == "Ascending") {
+//                    if (OrdeOfList == "Ascending") {
                         if (i == 0) {
                             firstLocation = waypoint
                         }
-                    }
-                    if (OrdeOfList == "Descending") {
-                        if (i !=0 ) {
-                            firstLocation = waypoint
-                        }
-                    }
+//                    }
+//                    if (OrdeOfList == "Descending") {
+//                        if (i == waypoints.lastIndex ) {
+//                            firstLocation = waypoint
+//                        }
+//                    }
                 }
                 firstLocation?.let {
                     mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(it, 10f))

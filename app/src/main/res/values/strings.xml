@@ -5,4 +5,6 @@
     <string name="save">Save</string>
     <string name="google_map_api_key">AIzaSyBSNyp6GQnnKlrMr7hD2HGiyF365tFlK5U</string>
     <string name="title_activity_maps_routing">MapsRoutingActivity</string>
+    <string name="sort_distance_in_descending_order">Sort distance in descending order</string>
+    <string name="sort_distance_in_ascending_order">Sort distance in ascending order</string>
 </resources>

@@ -11,9 +11,6 @@ interface ContantDAO {
     @Insert
     fun insertLocation(contact: AddLocationDataClass)
 
-    @Update
-     fun updateLocation(contact: AddLocationDataClass)
-
     @Delete
      fun deleteLocation(contact: AddLocationDataClass)
 

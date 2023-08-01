@@ -62,19 +62,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginVertical="5dp"
-            android:buttonTint="@drawable/background_button_radio_chek"
-            android:text="Sort distance in ascending order"
+            android:text="@string/sort_distance_in_ascending_order"
             android:textSize="17sp"
-            android:checked="@={viewModel.ascendingOrderChecked}" />
+            android:checked="@={viewModel.ascendingOrderChecked}"
+            android:buttonTint="@color/Pink" />
 
         <RadioButton
             android:id="@+id/rbDescendingOrder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:buttonTint="@drawable/background_button_radio_chek"
-            android:text="Sort distance in descending order"
-            android:textSize="17sp"
-            android:checked="@={viewModel.descendingOrderChecked}" />
+            android:layout_marginVertical="5dp"
+            android:text="@string/sort_distance_in_descending_order"
+            android:textSize="16sp"
+            android:checked="@={viewModel.descendingOrderChecked}"
+            android:buttonTint="@color/Pink" />
 
     </RadioGroup>
 

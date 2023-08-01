@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 class Repository(private val dao: ContantDAO) {
 
     val ascLocationList: LiveData<List<AddLocationDataClass>> = dao.ascendingList()
+    val descLocationList: LiveData<List<AddLocationDataClass>> = dao.descendingList()
 
     fun deleteLocation(location: AddLocationDataClass) {
         dao.deleteLocation(location)
@@ -14,8 +15,5 @@ class Repository(private val dao: ContantDAO) {
         dao.insertLocation(location)
     }
 
-    fun updateLocation(location: AddLocationDataClass) {
-        dao.updateLocation(location)
-    }
 }
 

@@ -2,10 +2,12 @@ package com.example.location_source.view
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.ViewModel
@@ -38,6 +40,10 @@ class BottomSheet : BottomSheetDialogFragment() {
         } else if (orderOfList == "Descending") {
             binding.viewModel?.descendingOrderChecked?.set(true)
         }
+
+        val colorStateList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.Pink))
+        binding.rbAscendingOrder.buttonTintList = colorStateList
+        binding.rbDescendingOrder.buttonTintList = colorStateList
 
         binding.btnApply.setOnClickListener {
             selectedOrder = if (binding.viewModel?.ascendingOrderChecked?.get() == true) {

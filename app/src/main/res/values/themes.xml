@@ -3,7 +3,7 @@
     <style name="Base.Theme.Location_Source" parent="Theme.Material3.DayNight.NoActionBar">
 
         <item name="android:statusBarColor">
-            @color/BackgroundColor
+            @color/black
         </item>
 
     </style>
